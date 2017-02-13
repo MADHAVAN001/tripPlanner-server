@@ -8,7 +8,25 @@ import java.util.Date;
  *
  */
 public class PlaceActivity extends Activity {
-	public PlaceActivity(Date fromDate, Date toDate) {
+	int placeId;
+
+	public PlaceActivity(Date fromDate, Date toDate, int placeId) {
 		super(fromDate, toDate);
+		this.placeId = placeId;
+	}
+
+	/**
+	 * @return the placeId
+	 */
+	public int getPlaceId() {
+		return placeId;
+	}
+
+	/**
+	 * @param placeId
+	 *            the placeId to set
+	 */
+	public void setPlaceId(int placeId) {
+		this.placeId = placeId;
 	}
 }
