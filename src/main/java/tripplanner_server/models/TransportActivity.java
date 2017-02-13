@@ -1,16 +1,27 @@
 package tripplanner_server.models;
 
+import java.util.Date;
+
 /**
  * Class defining the best transport mode between two points
  * 
  * @author MADHAVAN001
  *
  */
-public class Transport {
+public class TransportActivity extends Activity {
 	Location startPoint;
 	Location endPoint;
 	double duration;
 	String modeOfTransport;
+
+	public TransportActivity(Location startPoint, Location endPoint, double duration, String modeOfTransport,
+			Date fromDate, Date toDate) {
+		super(fromDate, toDate);
+		this.startPoint = startPoint;
+		this.endPoint = endPoint;
+		this.duration = duration;
+		this.modeOfTransport = modeOfTransport;
+	}
 
 	/**
 	 * Starting point
