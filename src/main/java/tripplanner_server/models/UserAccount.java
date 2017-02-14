@@ -12,6 +12,21 @@ import java.util.Date;
  *
  */
 public class UserAccount {
+	String id;
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	String email;
 	String password;
 	Date date;

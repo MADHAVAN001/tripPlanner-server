@@ -16,6 +16,21 @@ public class Trip {
 	Date fromDate;
 	Date toDate;
 	String city;
+	Location startPoint;
+
+	/**
+	 * @return the startPoint
+	 */
+	public Location getStartPoint() {
+		return startPoint;
+	}
+
+	/**
+	 * @param startPoint the startPoint to set
+	 */
+	public void setStartPoint(Location startPoint) {
+		this.startPoint = startPoint;
+	}
 
 	public Trip(double budget, List<String> listInterests, Date fromDate, Date toDate, String city) {
 		this.budget = budget;
