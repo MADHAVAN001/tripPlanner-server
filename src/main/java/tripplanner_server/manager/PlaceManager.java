@@ -44,7 +44,7 @@ public class PlaceManager {
 		}
 		return attractions;
 	}
-
+	
 	/**
 	 * 
 	 * @param query

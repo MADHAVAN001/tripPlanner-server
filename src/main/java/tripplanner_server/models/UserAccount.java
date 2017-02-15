@@ -13,6 +13,17 @@ import java.util.Date;
  */
 public class UserAccount {
 	String id;
+	String email;
+	String password;
+	Date date;
+	String userName;
+
+	public UserAccount(String email, String password, Date date, String userName) {
+		this.email = email;
+		this.password = password;
+		this.date = date;
+		this.userName = userName;
+	}
 	/**
 	 * @return the id
 	 */
@@ -25,18 +36,6 @@ public class UserAccount {
 	 */
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	String email;
-	String password;
-	Date date;
-	String userName;
-
-	public UserAccount(String email, String password, Date date, String userName) {
-		this.email = email;
-		this.password = password;
-		this.date = date;
-		this.userName = userName;
 	}
 
 	/**
