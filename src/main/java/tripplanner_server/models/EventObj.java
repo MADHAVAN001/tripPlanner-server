@@ -9,7 +9,7 @@ import java.util.Date;
  * @author MADHAVAN001
  *
  */
-public class Event {
+public class EventObj {
 	String title;
 	String venueName;
 	String venueCity;
@@ -18,9 +18,11 @@ public class Event {
 	Date startTime;
 	Date stopTime;
 	String getURL;
+	double latitude;
+	double longitude;
 
-	public Event(String title, String venueName, String venueCity, String description, double price, Date startTime,
-			Date stopTime, String getURL) {
+	public EventObj(String title, String venueName, String venueCity, String description, double price, Date startTime,
+			Date stopTime, String getURL,double latitude,double longitude) {
 		this.title = title;
 		this.venueName = venueName;
 		this.venueCity = venueCity;
@@ -28,6 +30,8 @@ public class Event {
 		this.startTime = startTime;
 		this.stopTime = stopTime;
 		this.getURL = getURL;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 
 	/**
@@ -149,5 +153,32 @@ public class Event {
 	public void setGetURL(String getURL) {
 		this.getURL = getURL;
 	}
-
+	
+	/**
+	 * @return the latitude
+	 */
+	public Double getLatitude() {
+		return latitude;
+	}
+	/**
+	 * @param get Latitude
+	 *            the latitude to set
+	 */
+	public void setlatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	/**
+	 * @return the longitude
+	 */
+	public Double getLongitude() {
+		return latitude;
+	}
+	/**
+	 * @param setLongitude
+	 *            the longitude to set
+	 */
+	public void setlongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	
 }

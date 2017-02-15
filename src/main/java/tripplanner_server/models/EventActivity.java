@@ -7,9 +7,9 @@ import java.util.Date;
  *
  */
 public class EventActivity extends Activity {
-	Event event;
+	EventObj event;
 
-	public EventActivity(Event event, Date fromDate, Date toDate) {
+	public EventActivity(EventObj event, Date fromDate, Date toDate) {
 		super(fromDate, toDate);
 		this.event = event;
 	}
@@ -17,7 +17,7 @@ public class EventActivity extends Activity {
 	/**
 	 * @return the event
 	 */
-	public Event getEvent() {
+	public EventObj getEvent() {
 		return event;
 	}
 
@@ -25,7 +25,7 @@ public class EventActivity extends Activity {
 	 * @param event
 	 *            the event to set
 	 */
-	public void setEvent(Event event) {
+	public void setEvent(EventObj event) {
 		this.event = event;
 	}
 
