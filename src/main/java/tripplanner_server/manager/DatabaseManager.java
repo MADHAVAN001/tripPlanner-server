@@ -8,8 +8,16 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import tripplanner_server.models.EventObject;
+import tripplanner_server.models.Location;
+import tripplanner_server.models.TransportActivity;
+import tripplanner_server.models.Trip;
 import tripplanner_server.models.UserAccount;
 
 /**
@@ -29,8 +37,142 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-
 	
+	public int addTransport(TransportActivity transport) {
+		if (transport == null)
+			return -1;
+		String sql = "INSERT INTO \"" + schemaName
+				+ "\".transport(distance, duration, startlatitude, startlongitude, endlatitude, endlongitude, modeoftransport) VALUES("
+				+ transport.getDistance() + ", " + transport.getDuration() + ", "
+				+ transport.getStartPoint().getLatitude() + ", " + transport.getStartPoint().getLongitude() + ", "
+				+ transport.getEndPoint().getLatitude() + ", " + transport.getEndPoint().getLongitude() + ", \'"
+				+ transport.getModeOfTransport() + "\');";
+		this.executeUpdate(sql);
+
+		sql = "SELECT * FROM \"" + schemaName + "\".transport ORDER BY id;";
+
+		int id = -1;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			if (resultSet.next()) {
+				id = resultSet.getInt("id");
+			}
+			statement.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
+	}
+
+	/**
+	 * 
+	 * @param eventId
+	 * @return
+	 */
+	public EventObject getEventbyId(int eventId) {
+		if (eventId <= 0)
+			return null;
+
+		String sql = "SELECT * FROM \"" + schemaName + "\".events WHERE id = " + eventId + ";";
+
+		Statement statement = null;
+		EventObject event = null;
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			if (resultSet.next()) {
+				DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+				event = new EventObject(resultSet.getString("title"), resultSet.getString("venueName"),
+						resultSet.getString("venueCity"), resultSet.getString("description"),
+						resultSet.getDouble("price"), df.parse(resultSet.getString("startdate")),
+						df.parse(resultSet.getString("enddate")), resultSet.getString("url"),
+						new Location(resultSet.getDouble("latitude"), resultSet.getDouble("longitude")));
+			}
+			statement.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return event;
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public boolean addEvent(EventObject event) {
+		if (event == null)
+			return false;
+		String sql = "INSERT INTO \"" + schemaName
+				+ "\".events(title, venuename, description, venuecity, latitude, longitude, url, startdate, enddate)	VALUES (\'"
+				+ event.getTitle() + "\', \'" + event.getVenueName() + "\', \'" + event.getDescription() + "\', \'"
+				+ event.getVenueCity() + "\', " + event.getLocation().getLongitude() + ", "
+				+ event.getLocation().getLongitude() + ", \'" + event.getGetURL() + "\', \'" + event.getStartTime()
+				+ "\', \'" + event.getStopTime() + "\');";
+		return this.executeUpdate(sql);
+	}
+
+	/**
+	 * 
+	 * @param userName
+	 * @param tripId
+	 * @return
+	 */
+	public boolean deleteTrip(String userName, int tripId) {
+		if (userName == null || tripId <= 0)
+			return false;
+		String sql = "DELETE FROM \"" + schemaName + "\".triprequests WHERE username = \'" + userName + "\' AND id="
+				+ tripId + ";";
+		return this.executeUpdate(sql);
+	}
+
+	/**
+	 * 
+	 * @param trip
+	 * @return
+	 */
+	public int addTrip(Trip trip) {
+		if (trip == null)
+			return -1;
+
+		String sql = "INSERT INTO \"" + schemaName
+				+ "\".triprequests(username, listinterests, fromdate, todate, startlatitude, startlongitude, city, budget) VALUES (\'"
+				+ trip.getUserName() + "\', [";
+
+		for (int i = 0; i < trip.getListInterests().size(); i++) {
+			if (i != trip.getListInterests().size() - 1)
+				sql += "\'" + trip.getListInterests().get(i) + "\',";
+			else
+				sql += "\'" + trip.getListInterests().get(i) + "\'";
+		}
+		sql += "], \'" + trip.getFromDate().toString() + "\', \'" + trip.getToDate().toString() + "\', "
+				+ trip.getStartPoint().getLatitude() + ", " + trip.getStartPoint().getLongitude() + ", \'"
+				+ trip.getCity() + "\'', " + trip.getBudget() + ");";
+		this.executeUpdate(sql);
+
+		sql = "SELECT id FROM \"" + schemaName + "\".triprequests WHERE username = \'" + trip.getUserName()
+				+ "\' ORDER BY id DESC";
+
+		int id = -1;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			if (resultSet.next()) {
+				id = resultSet.getInt("id");
+			}
+			statement.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
+	}
+
 	/**
 	 * 
 	 * @param placeId
@@ -47,9 +189,9 @@ public class DatabaseManager {
 				+ placeId + "\', \'" + interest + "\',[";
 		for (int i = 0; i < recommendedList.size(); i++) {
 			if (i != recommendedList.size() - 1)
-				sql += recommendedList.get(i) + ",";
+				sql += "\'" + recommendedList.get(i) + "\',";
 			else
-				sql += recommendedList.get(i);
+				sql += "\'" + recommendedList.get(i) + "\'";
 		}
 		sql += "]);";
 		return this.executeUpdate(sql);

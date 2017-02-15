@@ -11,12 +11,46 @@ import java.util.List;
  *
  */
 public class Trip {
+	int id;
+	String userName;
 	double budget;
 	List<String> listInterests;
 	Date fromDate;
 	Date toDate;
 	String city;
 	Location startPoint;
+
+	public Trip(int id, double budget, List<String> listInterests, Date fromDate, Date toDate, String city) {
+		this.id = id;
+		this.budget = budget;
+		this.listInterests = listInterests;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.city = city;
+	}
+
+	public Trip(double budget, List<String> listInterests, Date fromDate, Date toDate, String city) {
+		this.budget = budget;
+		this.listInterests = listInterests;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.city = city;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the startPoint
@@ -26,18 +60,11 @@ public class Trip {
 	}
 
 	/**
-	 * @param startPoint the startPoint to set
+	 * @param startPoint
+	 *            the startPoint to set
 	 */
 	public void setStartPoint(Location startPoint) {
 		this.startPoint = startPoint;
-	}
-
-	public Trip(double budget, List<String> listInterests, Date fromDate, Date toDate, String city) {
-		this.budget = budget;
-		this.listInterests = listInterests;
-		this.fromDate = fromDate;
-		this.toDate = toDate;
-		this.city = city;
 	}
 
 	/**
@@ -114,4 +141,20 @@ public class Trip {
 	public void setCity(String city) {
 		this.city = city;
 	}
+
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * @param userName
+	 *            the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 }

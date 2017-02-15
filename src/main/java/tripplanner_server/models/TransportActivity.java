@@ -12,15 +12,32 @@ public class TransportActivity extends Activity {
 	Location startPoint;
 	Location endPoint;
 	double duration;
+	double distance;
 	String modeOfTransport;
 
-	public TransportActivity(Location startPoint, Location endPoint, double duration, String modeOfTransport,
-			Date fromDate, Date toDate) {
+	public TransportActivity(Location startPoint, Location endPoint, double distance, double duration,
+			String modeOfTransport, Date fromDate, Date toDate) {
 		super(fromDate, toDate);
+		this.distance = distance;
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
 		this.duration = duration;
 		this.modeOfTransport = modeOfTransport;
+	}
+
+	/**
+	 * @return the distance
+	 */
+	public double getDistance() {
+		return distance;
+	}
+
+	/**
+	 * @param distance
+	 *            the distance to set
+	 */
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 
 	/**
