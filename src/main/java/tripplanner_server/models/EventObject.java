@@ -9,7 +9,7 @@ import java.util.Date;
  * @author MADHAVAN001
  *
  */
-public class EventObj {
+public class EventObject {
 	String title;
 	String venueName;
 	String venueCity;
@@ -18,11 +18,10 @@ public class EventObj {
 	Date startTime;
 	Date stopTime;
 	String getURL;
-	double latitude;
-	double longitude;
+	Location location;
 
-	public EventObj(String title, String venueName, String venueCity, String description, double price, Date startTime,
-			Date stopTime, String getURL,double latitude,double longitude) {
+	public EventObject(String title, String venueName, String venueCity, String description, double price, Date startTime,
+			Date stopTime, String getURL, Location location) {
 		this.title = title;
 		this.venueName = venueName;
 		this.venueCity = venueCity;
@@ -30,8 +29,7 @@ public class EventObj {
 		this.startTime = startTime;
 		this.stopTime = stopTime;
 		this.getURL = getURL;
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this.location = location;
 	}
 
 	/**
@@ -153,32 +151,20 @@ public class EventObj {
 	public void setGetURL(String getURL) {
 		this.getURL = getURL;
 	}
-	
+
 	/**
-	 * @return the latitude
+	 * @return the location
 	 */
-	public Double getLatitude() {
-		return latitude;
+	public Location getLocation() {
+		return location;
 	}
+
 	/**
-	 * @param get Latitude
-	 *            the latitude to set
+	 * @param location
+	 *            the location to set
 	 */
-	public void setlatitude(double latitude) {
-		this.latitude = latitude;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
-	/**
-	 * @return the longitude
-	 */
-	public Double getLongitude() {
-		return latitude;
-	}
-	/**
-	 * @param setLongitude
-	 *            the longitude to set
-	 */
-	public void setlongitude(double longitude) {
-		this.longitude = longitude;
-	}
-	
+
 }
