@@ -38,8 +38,10 @@ public class TransportManager {
 				@SuppressWarnings("deprecation")
 				Date toDate = new Date(fromDate.getYear(), fromDate.getMonth(), fromDate.getDay(), fromDate.getHours(),
 						fromDate.getMinutes());
+				/*
 				activity = new TransportActivity(startPoint, endPoint, Double.parseDouble(element.duration.toString()),
-						"TAXI", fromDate, toDate);
+"TAXI", fromDate, toDate);
+*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

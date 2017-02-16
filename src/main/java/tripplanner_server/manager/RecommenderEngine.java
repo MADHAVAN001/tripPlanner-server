@@ -6,6 +6,6 @@ import tripplanner_server.models.Trip;
 public class RecommenderEngine {
 	public void generateTrips(Trip trip) {
 		Location startLocation = trip.getStartPoint();
-		PriorityQueue<>
+		//PriorityQueue<>
 	}
 }

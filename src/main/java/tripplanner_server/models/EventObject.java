@@ -31,6 +31,7 @@ public class EventObject {
 		this.getURL = getURL;
 		this.location = location;
 	}
+	
 
 	/**
 	 * @return the title

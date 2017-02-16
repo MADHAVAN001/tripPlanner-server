@@ -3,9 +3,12 @@
  */
 package tripplanner_server.manager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+
 
 import com.evdb.javaapi.APIConfiguration;
 import com.evdb.javaapi.EVDBAPIException;
@@ -14,6 +17,9 @@ import com.evdb.javaapi.data.Event;
 import com.evdb.javaapi.data.SearchResult;
 import com.evdb.javaapi.data.request.EventSearchRequest;
 import com.evdb.javaapi.operations.EventOperations;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tripplanner_server.models.EventObject;
 import tripplanner_server.models.Location;
@@ -47,7 +53,7 @@ public class EventsManager {
 		EventSearchRequest esr = new EventSearchRequest();
 		esr.setLocation("Singapore");
 		esr.setKeywords(keyword);
-		// esr.setDateRange(dateRange); //format e.g 2017020000-20170420000
+		esr.setDateRange(dateRange); //format e.g 2017020000-20170420000
 
 		esr.setPageSize(50); // can change depending
 		esr.setPageNumber(1);
@@ -64,7 +70,12 @@ public class EventsManager {
 			venueName = arrayList.get(i).getVenueName();
 			venueCity = arrayList.get(i).getVenueCity();
 			description = arrayList.get(i).getDescription();
+			try{
 			price = Double.parseDouble(arrayList.get(i).getPrice());
+			}
+			catch(Exception e){
+				price = 0.0;
+			}
 			startTime = arrayList.get(i).getStartTime();
 			stopTime = arrayList.get(i).getStopTime();
 			getURL = arrayList.get(i).getURL();
@@ -77,4 +88,30 @@ public class EventsManager {
 		}
 		return eventsList;
 	}
+	
+	public String[] handleEventRequestJSON(String keyword,String dateRange) throws JsonGenerationException, JsonMappingException, IOException, EVDBRuntimeException, EVDBAPIException{
+		String dateTime="";
+		if(dateRange==null){
+			dateTime = null;
+		}
+		else
+			dateTime = dateRange;
+		
+		List<EventObject> eventList = getEvents(keyword,dateTime);
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		 String[] eventToJSONString = new String[eventList.size()]; 
+		 for(int i =0; i<eventList.size();i++){
+       	  
+       	  eventToJSONString[i] = mapper.writeValueAsString(eventList.get(i));
+      
+		 }
+         return eventToJSONString; 
+	
+	
+	
+	}
 }
+

@@ -85,7 +85,25 @@
 			<artifactId>google-maps-services</artifactId>
 			<version>0.1.17</version>
 		</dependency>
+		<dependency>
+		<groupId>
+		com.fasterxml.jackson.core
+		</groupId>
+		<artifactId>jackson-core</artifactId>
+		<version>2.8.6</version>
+		</dependency>
+		<dependency>
+		<groupId>
+		com.fasterxml.jackson.core
+		</groupId>
+		<artifactId>jackson-databind</artifactId>
+		<version>2.8.6</version>
+		</dependency>
+		
+		
 	</dependencies>
+	
+	
 	<repositories>
 		<repository>
 			<id>springsource-milestones</id>
