@@ -1,6 +1,6 @@
 package tripplanner_server.models;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,16 +10,32 @@ import java.util.Map;
  *
  */
 public class Itinerary {
-	Map<Integer, List<Object>> activityList;
+	int tripRequestId;
+	List<Map<Integer, List<Object>>> activityList;
 
-	public Itinerary(Map<Integer, List<Object>> activityList) {
-		activityList = new HashMap<Integer, List<Object>>(activityList);
+	public Itinerary(int tripRequestId, List<Map<Integer, List<Object>>> activityList) {
+		activityList = new ArrayList<Map<Integer, List<Object>>>(activityList);
+	}
+
+	/**
+	 * @return the tripRequestId
+	 */
+	public int getTripRequestId() {
+		return tripRequestId;
+	}
+
+	/**
+	 * @param tripRequestId
+	 *            the tripRequestId to set
+	 */
+	public void setTripRequestId(int tripRequestId) {
+		this.tripRequestId = tripRequestId;
 	}
 
 	/**
 	 * @return the activityList
 	 */
-	public Map<Integer, List<Object>> getActivityList() {
+	public List<Map<Integer, List<Object>>> getActivityList() {
 		return activityList;
 	}
 
@@ -27,7 +43,7 @@ public class Itinerary {
 	 * @param activityList
 	 *            the activityList to set
 	 */
-	public void setActivityList(Map<Integer, List<Object>> activityList) {
+	public void setActivityList(List<Map<Integer, List<Object>>> activityList) {
 		this.activityList = activityList;
 	}
 

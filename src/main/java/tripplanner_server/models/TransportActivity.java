@@ -14,6 +14,7 @@ public class TransportActivity extends Activity {
 	double duration;
 	double distance;
 	String modeOfTransport;
+	int id;
 
 	public TransportActivity(Location startPoint, Location endPoint, double distance, double duration,
 			String modeOfTransport, Date fromDate, Date toDate) {
@@ -111,5 +112,20 @@ public class TransportActivity extends Activity {
 	public void setModeOfTransport(String modeOfTransport) {
 		this.modeOfTransport = modeOfTransport;
 	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 
 }

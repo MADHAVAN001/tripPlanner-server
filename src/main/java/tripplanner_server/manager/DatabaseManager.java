@@ -10,12 +10,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import tripplanner_server.models.EventActivity;
 import tripplanner_server.models.EventObject;
+import tripplanner_server.models.Itinerary;
 import tripplanner_server.models.Location;
+import tripplanner_server.models.PlaceActivity;
 import tripplanner_server.models.TransportActivity;
 import tripplanner_server.models.Trip;
 import tripplanner_server.models.UserAccount;
@@ -37,7 +40,63 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public boolean addItinerary(Itinerary itinerary, int responseId) {
+		if (itinerary == null)
+			return false;
+
+		boolean result = true;
+		for (int i = 0; i < itinerary.getActivityList().size(); i++) {
+			Iterator<Integer> itr = itinerary.getActivityList().get(i).keySet().iterator();
+			while (itr.hasNext()) {
+				Integer key = new Integer(itr.next());
+				if (itinerary.getActivityList().get(i).get(key) instanceof EventActivity) {
+					EventActivity activity = (EventActivity) itinerary.getActivityList().get(i).get(key);
+					String sql = "INSERT INTO \"" + schemaName
+							+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
+							+ itinerary.getTripRequestId() + ", " + i + ", " + key.toString() + ", \'"
+							+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, "
+							+ activity.getEvent().getId() + ");";
+					result = result & this.executeUpdate(sql);
+				} else if (itinerary.getActivityList().get(i).get(key) instanceof TransportActivity) {
+					TransportActivity activity = (TransportActivity) itinerary.getActivityList().get(i).get(key);
+					String sql = "INSERT INTO \"" + schemaName
+							+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
+							+ itinerary.getTripRequestId() + ", " + i + ", " + key.toString() + ", \'"
+							+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, " + activity.getId()
+							+ ");";
+					result = result & this.executeUpdate(sql);
+				} else if (itinerary.getActivityList().get(i).get(key) instanceof PlaceActivity) {
+					PlaceActivity activity = (PlaceActivity) itinerary.getActivityList().get(i).get(key);
+					String sql = "INSERT INTO \"" + schemaName
+							+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
+							+ itinerary.getTripRequestId() + ", " + i + ", " + key.toString() + ", \'"
+							+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, "
+							+ activity.getPlaceId() + ");";
+					result = result & this.executeUpdate(sql);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean removeTransport(int id) {
+		if (id <= 0)
+			return false;
+		String sql = "DELETE FROM \"" + schemaName + "\".transport WHERE id=" + id;
+		return this.executeUpdate(sql);
+	}
+
+	/**
+	 * 
+	 * @param transport
+	 * @return
+	 */
 	public int addTransport(TransportActivity transport) {
 		if (transport == null)
 			return -1;

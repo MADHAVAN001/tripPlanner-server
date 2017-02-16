@@ -10,6 +10,7 @@ import java.util.Date;
  *
  */
 public class EventObject {
+	int id;
 	String title;
 	String venueName;
 	String venueCity;
@@ -32,6 +33,21 @@ public class EventObject {
 		this.location = location;
 	}
 	
+	
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
 
 	/**
 	 * @return the title
