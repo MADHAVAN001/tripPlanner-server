@@ -21,9 +21,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 @Controller
 public class HomeController {
 	 @RequestMapping(value ="/event")
-	   //public void getEvent(HttpServletResponse response,HttpServletRequest request) throws JsonGenerationException, JsonMappingException, IOException, EVDBRuntimeException, EVDBAPIException {
+	   
 		   public void getEvent(HttpServletResponse response,HttpServletRequest request) throws IOException{
-		   
 		  //get receive JSON data from request
 		   BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		   String json ="";
@@ -39,11 +38,8 @@ public class HomeController {
 		   
 		   
 		   EventsManager em = new EventsManager();
-			// String keyword = request.getHeader("keyword");
-			 //String dateRange = request.getHeader("DataRange");
-			 
-			 String keyword = request.getParameter("keyword");
-			 String dateRange = request.getParameter("DateRange");
+		   String keyword = request.getParameter("keyword");
+		   String dateRange = request.getParameter("DateRange");
 			 
 			 System.out.println(keyword);
 			 System.out.println(dateRange);
@@ -56,10 +52,6 @@ public class HomeController {
 						response.getWriter().println(eventRequest[i]);
 						
 					 }
-
-				 
-
-				
 					 
 			} catch (JsonGenerationException e) {
 				// TODO Auto-generated catch block
@@ -81,4 +73,59 @@ public class HomeController {
 
 				
 	   }
+	 
+	 
+	 @RequestMapping(value ="/transport")
+	   
+	   public void getTransport(HttpServletResponse response,HttpServletRequest request) throws IOException{
+	  //get receive JSON data from request
+	   BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+	   String json ="";
+	   if(br!=null){
+		   json = br.readLine();
+	   }
+	   
+	   System.out.println(json);
+	  
+	   String[] eventRequest = new String[600000];
+	   //set response type to JSON
+	   response.setContentType("application/json");
+	   
+	   
+	   EventsManager em = new EventsManager();
+	   String keyword = request.getParameter("keyword");
+	   String dateRange = request.getParameter("DateRange");
+		 
+		 System.out.println(keyword);
+		 System.out.println(dateRange);
+		 
+		 try {
+			eventRequest = em.handleEventRequestJSON(keyword, dateRange);
+			
+			 for(int i=0;i<eventRequest.length;i++){
+					System.out.println(eventRequest[i]);
+					response.getWriter().println(eventRequest[i]);
+					
+				 }
+				 
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EVDBRuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EVDBAPIException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+
+			
+ }
 }
