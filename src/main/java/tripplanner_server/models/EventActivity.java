@@ -21,7 +21,7 @@ public class EventActivity extends Activity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((event == null) ? 0 : event.hashCode());
+		result = prime * result + ((event == null) ? 0 : event.hashCode())+super.hashCode();
 		return result;
 	}
 
@@ -42,7 +42,7 @@ public class EventActivity extends Activity {
 				return false;
 		} else if (!event.equals(other.event))
 			return false;
-		return true;
+		return true & super.equals(obj);
 	}
 
 	/**

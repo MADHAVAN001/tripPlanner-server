@@ -24,7 +24,7 @@ public class TransportActivity extends Activity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((transport == null) ? 0 : transport.hashCode());
+		result = prime * result + ((transport == null) ? 0 : transport.hashCode())+super.hashCode();
 		return result;
 	}
 
@@ -45,7 +45,7 @@ public class TransportActivity extends Activity {
 				return false;
 		} else if (!transport.equals(other.transport))
 			return false;
-		return true;
+		return true & super.equals(obj);
 	}
 
 	/**

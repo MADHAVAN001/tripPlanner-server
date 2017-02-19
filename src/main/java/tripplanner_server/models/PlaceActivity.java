@@ -24,7 +24,7 @@ public class PlaceActivity extends Activity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((placeId == null) ? 0 : placeId.hashCode());
+		result = prime * result + ((placeId == null) ? 0 : placeId.hashCode())+super.hashCode();
 		return result;
 	}
 
@@ -47,7 +47,7 @@ public class PlaceActivity extends Activity {
 				return false;
 		} else if (!placeId.equals(other.placeId))
 			return false;
-		return true;
+		return true & super.equals(obj);
 	}
 
 	/**

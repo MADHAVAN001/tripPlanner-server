@@ -3,6 +3,9 @@
  */
 package tripplanner_server.models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author MADHAVAN001
  *
@@ -103,5 +106,21 @@ public class KeyWords {
 	public static String UNIVERSITY = "university";
 	public static String VETERINARY_CARE = "veterinary_care";
 	public static String ZOO = "zoo";
+	
+	public static Map<String, Integer> timeMap;
+	
+	static{
+		timeMap = new HashMap<String,Integer>();
+		
+		timeMap.put(AQUARIUM, 180);
+		timeMap.put(AMUSEMENT_PARK, 360);
+		timeMap.put(ART_GALLERY, 180);
+		timeMap.put(BAKERY, 60);
+		timeMap.put(BOWLING_ALLEY, 180);
+		timeMap.put(CAFE, 60);
+		timeMap.put(CAMPGROUND, 240);
+	}
+	
+	
 
 }
