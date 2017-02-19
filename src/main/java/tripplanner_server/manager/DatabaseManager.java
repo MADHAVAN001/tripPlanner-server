@@ -3,6 +3,7 @@
  */
 package tripplanner_server.manager;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,15 +11,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import tripplanner_server.models.EventActivity;
 import tripplanner_server.models.EventObject;
 import tripplanner_server.models.Itinerary;
 import tripplanner_server.models.Location;
 import tripplanner_server.models.PlaceActivity;
+import tripplanner_server.models.Transport;
 import tripplanner_server.models.TransportActivity;
 import tripplanner_server.models.Trip;
 import tripplanner_server.models.UserAccount;
@@ -40,11 +48,162 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
-	
+
+	/**
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	public List<Pair<Trip, Itinerary>> getListItinerary(String userName) {
+		if (userName == null || userName.length() == 0)
+			return null;
+		String sql = "SELECT id, username, listinterests, fromdate, todate, startlatitude, startlongitude, city, budget	FROM \""
+				+ schemaName + "\".triprequests WHERE username = \'" + userName + "\';";
+
+		List<Pair<Trip, Itinerary>> itineraryList = new ArrayList<Pair<Trip, Itinerary>>();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				Trip trip = this.getTripById(resultSet.getInt("id"));
+				Itinerary itinerary = this.getIteneraryByTripId(trip.getId());
+				itineraryList.add(Pair.of(trip, itinerary));
+			}
+			statement.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return itineraryList;
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Itinerary getIteneraryByTripId(int id) {
+		if (id <= 0)
+			return null;
+		String sql = "SELECT id, triprequest, day, orderid, starttime, endtime, activitytype, activityid FROM \""
+				+ schemaName + "\".itinerary WHERE triprequest=" + id + " ORDER BY orderid;";
+		Statement statement = null;
+		Map<Integer, List<Object>> map = new HashMap<Integer, List<Object>>();
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+			while (resultSet.next()) {
+				int type = resultSet.getInt("activitytype");
+				if (type == 1) {
+					EventObject event = this.getEventbyId(Integer.parseInt(resultSet.getString("activityid")));
+					EventActivity activity = new EventActivity(event, df.parse(resultSet.getString("starttime")),
+							df.parse(resultSet.getString("endtime")));
+					if (!map.containsKey(resultSet.getInt("day")))
+						map.put(resultSet.getInt("day"), new ArrayList<Object>());
+					map.get(resultSet.getInt("day")).add(activity);
+				}
+				if (type == 2) {
+					Transport transport = this.getTransportById(Integer.parseInt(resultSet.getString("activityid")));
+					TransportActivity activity = new TransportActivity(transport,
+							df.parse(resultSet.getString("starttime")), df.parse(resultSet.getString("endtime")));
+					if (!map.containsKey(resultSet.getInt("day")))
+						map.put(resultSet.getInt("day"), new ArrayList<Object>());
+					map.get(resultSet.getInt("day")).add(activity);
+				}
+				if (type == 3) {
+					PlaceActivity activity = new PlaceActivity(resultSet.getString("activityid"),
+							df.parse(resultSet.getString("starttime")), df.parse(resultSet.getString("endtime")));
+					if (!map.containsKey(resultSet.getInt("day")))
+						map.put(resultSet.getInt("day"), new ArrayList<Object>());
+					map.get(resultSet.getInt("day")).add(activity);
+				}
+			}
+			statement.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new Itinerary(id, map);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Transport getTransportById(int id) {
+		if (id <= 0)
+			return null;
+		String sql = "SELECT id, distance, duration, startlatitude, startlongitude, endlatitude, endlongitude, modeoftransport FROM \""
+				+ schemaName + "\".transport WHERE id=" + id + ";";
+
+		Transport transport = null;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				transport = new Transport(id,
+						new Location(resultSet.getDouble("startlatitude"), resultSet.getDouble("startlongitude")),
+						new Location(resultSet.getDouble("endlatitude"), resultSet.getDouble("endlongitude")),
+						resultSet.getDouble("distance"), resultSet.getDouble("duration"),
+						resultSet.getString("modeoftransport"));
+			}
+			statement.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return transport;
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Trip getTripById(int id) {
+		if (id <= 0)
+			return null;
+		String sql = "SELECT id, username, listinterests, fromdate, todate, startlatitude, startlongitude, city, budget	FROM \""
+				+ schemaName + "\".triprequests WHERE id=" + id + ";";
+		Statement statement = null;
+		Trip trip = null;
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+			while (resultSet.next()) {
+				Array listInterests = resultSet.getArray("listinterests");
+				String[] interestsArray = (String[]) listInterests.getArray();
+				trip = new Trip(resultSet.getInt("id"), resultSet.getDouble("budget"),
+						new ArrayList<String>(Arrays.asList(interestsArray)), df.parse(resultSet.getString("fromdate")),
+						df.parse(resultSet.getString("todate")), resultSet.getString("city"),
+						new Location(resultSet.getDouble("startlatitude"), resultSet.getDouble("startlatitude")));
+				id = resultSet.getInt("id");
+			}
+			statement.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return trip;
+	}
+
+	/**
+	 * 
+	 * @param itinerary
+	 * @return
+	 */
+	public boolean deleteItinerary(int tripRequest) {
+		if (tripRequest <= 0)
+			return false;
+		String sql = "DELETE FROM \"" + schemaName + "\".itinerary WHERE triprequest = " + tripRequest;
+		return this.executeUpdate(sql);
+	}
+
 	/**
 	 * 
 	 * @param itinerary
@@ -56,35 +215,33 @@ public class DatabaseManager {
 			return false;
 
 		boolean result = true;
-		for (int i = 0; i < itinerary.getActivityList().size(); i++) {
-			Iterator<Integer> itr = itinerary.getActivityList().get(i).keySet().iterator();
-			while (itr.hasNext()) {
-				Integer key = new Integer(itr.next());
-				if (itinerary.getActivityList().get(i).get(key) instanceof EventActivity) {
-					EventActivity activity = (EventActivity) itinerary.getActivityList().get(i).get(key);
-					String sql = "INSERT INTO \"" + schemaName
-							+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
-							+ itinerary.getTripRequestId() + ", " + i + ", " + key.toString() + ", \'"
-							+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, "
-							+ activity.getEvent().getId() + ");";
-					result = result & this.executeUpdate(sql);
-				} else if (itinerary.getActivityList().get(i).get(key) instanceof TransportActivity) {
-					TransportActivity activity = (TransportActivity) itinerary.getActivityList().get(i).get(key);
-					String sql = "INSERT INTO \"" + schemaName
-							+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
-							+ itinerary.getTripRequestId() + ", " + i + ", " + key.toString() + ", \'"
-							+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, "
-							+ activity.getTransport().getId() + ");";
-					result = result & this.executeUpdate(sql);
-				} else if (itinerary.getActivityList().get(i).get(key) instanceof PlaceActivity) {
-					PlaceActivity activity = (PlaceActivity) itinerary.getActivityList().get(i).get(key);
-					String sql = "INSERT INTO \"" + schemaName
-							+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
-							+ itinerary.getTripRequestId() + ", " + i + ", " + key.toString() + ", \'"
-							+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, "
-							+ activity.getPlaceId() + ");";
-					result = result & this.executeUpdate(sql);
-				}
+		Iterator<Integer> itr = itinerary.getActivityMap().keySet().iterator();
+		while (itr.hasNext()) {
+			Integer key = new Integer(itr.next());
+			if (itinerary.getActivityMap().get(key) instanceof EventActivity) {
+				EventActivity activity = (EventActivity) itinerary.getActivityMap().get(key);
+				String sql = "INSERT INTO \"" + schemaName
+						+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
+						+ itinerary.getTripRequestId() + ", " + key + ", " + key.toString() + ", \'"
+						+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, "
+						+ activity.getEvent().getId() + ");";
+				result = result & this.executeUpdate(sql);
+			} else if (itinerary.getActivityMap().get(key) instanceof TransportActivity) {
+				TransportActivity activity = (TransportActivity) itinerary.getActivityMap().get(key);
+				String sql = "INSERT INTO \"" + schemaName
+						+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
+						+ itinerary.getTripRequestId() + ", " + key + ", " + key.toString() + ", \'"
+						+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 2, "
+						+ activity.getTransport().getId() + ");";
+				result = result & this.executeUpdate(sql);
+			} else if (itinerary.getActivityMap().get(key) instanceof PlaceActivity) {
+				PlaceActivity activity = (PlaceActivity) itinerary.getActivityMap().get(key);
+				String sql = "INSERT INTO \"" + schemaName
+						+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
+						+ itinerary.getTripRequestId() + ", " + key + ", " + key.toString() + ", \'"
+						+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 3, " + activity.getPlaceId()
+						+ ");";
+				result = result & this.executeUpdate(sql);
 			}
 		}
 		return result;
@@ -107,20 +264,18 @@ public class DatabaseManager {
 	 * @param transport
 	 * @return
 	 */
-	public int addTransport(TransportActivity transport) {
+	public int addTransport(Transport transport) {
 		if (transport == null)
 			return -1;
 		String sql = "INSERT INTO \"" + schemaName
 				+ "\".transport(distance, duration, startlatitude, startlongitude, endlatitude, endlongitude, modeoftransport) VALUES("
-				+ transport.getTransport().getDistance() + ", " + transport.getTransport().getDuration() + ", "
-				+ transport.getTransport().getStartPoint().getLatitude() + ", "
-				+ transport.getTransport().getStartPoint().getLongitude() + ", "
-				+ transport.getTransport().getEndPoint().getLatitude() + ", "
-				+ transport.getTransport().getEndPoint().getLongitude() + ", \'"
-				+ transport.getTransport().getModeOfTransport() + "\');";
+				+ transport.getDistance() + ", " + transport.getDuration() + ", "
+				+ transport.getStartPoint().getLatitude() + ", " + transport.getStartPoint().getLongitude() + ", "
+				+ transport.getEndPoint().getLatitude() + ", " + transport.getEndPoint().getLongitude() + ", \'"
+				+ transport.getModeOfTransport() + "\');";
 		this.executeUpdate(sql);
 
-		sql = "SELECT * FROM \"" + schemaName + "\".transport ORDER BY id;";
+		sql = "SELECT * FROM \"" + schemaName + "\".transport ORDER BY id DESC;";
 
 		int id = -1;
 		Statement statement = null;
@@ -156,7 +311,7 @@ public class DatabaseManager {
 			ResultSet resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
-				event = new EventObject(resultSet.getString("title"), resultSet.getString("venueName"),
+				event = new EventObject(eventId, resultSet.getString("title"), resultSet.getString("venueName"),
 						resultSet.getString("venueCity"), resultSet.getString("description"),
 						resultSet.getDouble("price"), df.parse(resultSet.getString("startdate")),
 						df.parse(resultSet.getString("enddate")), resultSet.getString("url"),
@@ -175,16 +330,34 @@ public class DatabaseManager {
 	 * @param event
 	 * @return
 	 */
-	public boolean addEvent(EventObject event) {
+	public int addEvent(EventObject event) {
 		if (event == null)
-			return false;
+			return -1;
 		String sql = "INSERT INTO \"" + schemaName
 				+ "\".events(title, venuename, description, venuecity, latitude, longitude, url, startdate, enddate)	VALUES (\'"
 				+ event.getTitle() + "\', \'" + event.getVenueName() + "\', \'" + event.getDescription() + "\', \'"
 				+ event.getVenueCity() + "\', " + event.getLocation().getLongitude() + ", "
 				+ event.getLocation().getLongitude() + ", \'" + event.getGetURL() + "\', \'" + event.getStartTime()
 				+ "\', \'" + event.getStopTime() + "\');";
-		return this.executeUpdate(sql);
+		this.executeUpdate(sql);
+
+		sql = "SELECT MAX(id) AS id FROM \"" + schemaName + "\".events";
+
+		int id = -1;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			if (resultSet.next()) {
+				id = resultSet.getInt("id");
+			}
+			statement.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
+
 	}
 
 	/**

@@ -6,7 +6,11 @@ package tripplanner_server.manager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.evdb.javaapi.APIConfiguration;
 import com.evdb.javaapi.EVDBAPIException;
@@ -27,9 +31,44 @@ import tripplanner_server.models.Location;
  *
  */
 public class EventsManager {
+	public static Map<Pair<String, String>, List<EventObject>> eventsMap;
 	private String API_KEY = "7m2B8sjhmH2vHpt5";
+	DatabaseManager manager;
+	static {
+		eventsMap = new HashMap<Pair<String, String>, List<EventObject>>();
+	}
 
+	public EventsManager() {
+		manager = new DatabaseManager();
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public int addEvents(EventObject event) {
+		if (event == null)
+			return -1;
+		return manager.addEvent(event);
+	}
+
+	/**
+	 * 
+	 * @param keyword
+	 * @param dateRange
+	 * @return
+	 * @throws EVDBRuntimeException
+	 * @throws EVDBAPIException
+	 */
 	public List<EventObject> getEvents(String keyword, String dateRange) throws EVDBRuntimeException, EVDBAPIException {
+
+		if (keyword == null || keyword.length() == 0 || dateRange == null || dateRange.length() == 0)
+			return null;
+
+		if (eventsMap.containsKey(Pair.of(keyword, dateRange)))
+			return eventsMap.get(Pair.of(keyword, dateRange));
+		
 		List<EventObject> eventsList = new ArrayList<EventObject>();
 
 		String title;
@@ -81,9 +120,21 @@ public class EventsManager {
 					getURL, new Location(latitude, longitude));
 			eventsList.add(e);
 		}
+		eventsMap.put(Pair.of(keyword, dateRange), eventsList);
 		return eventsList;
 	}
 
+	/**
+	 * 
+	 * @param keyword
+	 * @param dateRange
+	 * @return
+	 * @throws JsonGenerationException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 * @throws EVDBRuntimeException
+	 * @throws EVDBAPIException
+	 */
 	public String[] handleEventRequestJSON(String keyword, String dateRange)
 			throws JsonGenerationException, JsonMappingException, IOException, EVDBRuntimeException, EVDBAPIException {
 		String dateTime = "";

@@ -13,6 +13,7 @@ import com.google.maps.model.DistanceMatrixElement;
 import com.google.maps.model.DistanceMatrixRow;
 
 import tripplanner_server.models.Location;
+import tripplanner_server.models.Transport;
 import tripplanner_server.models.TransportActivity;
 
 /**
@@ -20,6 +21,13 @@ import tripplanner_server.models.TransportActivity;
  *
  */
 public class TransportManager {
+	/**
+	 * 
+	 * @param startPoint
+	 * @param endPoint
+	 * @param fromDate
+	 * @return
+	 */
 	public TransportActivity getTransportationDetails(Location startPoint, Location endPoint, Date fromDate) {
 		if (startPoint == null || endPoint == null || fromDate == null)
 			return null;
@@ -34,14 +42,13 @@ public class TransportManager {
 			DistanceMatrix matrix = request.await();
 			DistanceMatrixRow row[] = matrix.rows;
 			for (DistanceMatrixElement element : row[0].elements) {
-				// System.out.println("Result: "+ element.duration);
 				@SuppressWarnings("deprecation")
 				Date toDate = new Date(fromDate.getYear(), fromDate.getMonth(), fromDate.getDay(), fromDate.getHours(),
 						fromDate.getMinutes());
-				/*
-				activity = new TransportActivity(startPoint, endPoint, Double.parseDouble(element.duration.toString()),
-"TAXI", fromDate, toDate);
-*/
+				Transport transport = new Transport(startPoint, endPoint, element.distance.inMeters,
+						element.duration.inSeconds, "TAXI");
+				activity = new TransportActivity(transport, fromDate, toDate);
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
