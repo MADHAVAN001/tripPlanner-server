@@ -21,8 +21,46 @@ public class EventObject {
 	String getURL;
 	Location location;
 
+	/**
+	 * 
+	 * @param title
+	 * @param venueName
+	 * @param venueCity
+	 * @param description
+	 * @param price
+	 * @param startTime
+	 * @param stopTime
+	 * @param getURL
+	 * @param location
+	 */
 	public EventObject(String title, String venueName, String venueCity, String description, double price,
 			Date startTime, Date stopTime, String getURL, Location location) {
+		this.title = title;
+		this.venueName = venueName;
+		this.venueCity = venueCity;
+		this.price = price;
+		this.startTime = startTime;
+		this.stopTime = stopTime;
+		this.getURL = getURL;
+		this.location = location;
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param title
+	 * @param venueName
+	 * @param venueCity
+	 * @param description
+	 * @param price
+	 * @param startTime
+	 * @param stopTime
+	 * @param getURL
+	 * @param location
+	 */
+	public EventObject(int id, String title, String venueName, String venueCity, String description, double price,
+			Date startTime, Date stopTime, String getURL, Location location) {
+		this.id = id;
 		this.title = title;
 		this.venueName = venueName;
 		this.venueCity = venueCity;

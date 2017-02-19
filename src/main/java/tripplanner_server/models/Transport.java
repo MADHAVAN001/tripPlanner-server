@@ -8,6 +8,14 @@ public class Transport {
 	String modeOfTransport;
 	int id;
 
+	/**
+	 * 
+	 * @param startPoint
+	 * @param endPoint
+	 * @param distance
+	 * @param duration
+	 * @param modeOfTransport
+	 */
 	public Transport(Location startPoint, Location endPoint, double distance, double duration, String modeOfTransport) {
 		this.distance = distance;
 		this.startPoint = startPoint;
@@ -15,8 +23,29 @@ public class Transport {
 		this.duration = duration;
 		this.modeOfTransport = modeOfTransport;
 	}
-	
-	/* (non-Javadoc)
+
+	/**
+	 * 
+	 * @param id
+	 * @param startPoint
+	 * @param endPoint
+	 * @param distance
+	 * @param duration
+	 * @param modeOfTransport
+	 */
+	public Transport(int id, Location startPoint, Location endPoint, double distance, double duration,
+			String modeOfTransport) {
+		this.id = id;
+		this.distance = distance;
+		this.startPoint = startPoint;
+		this.endPoint = endPoint;
+		this.duration = duration;
+		this.modeOfTransport = modeOfTransport;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -35,7 +64,9 @@ public class Transport {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
