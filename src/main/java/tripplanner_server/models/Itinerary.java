@@ -17,6 +17,44 @@ public class Itinerary {
 		activityList = new ArrayList<Map<Integer, List<Object>>>(activityList);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((activityList == null) ? 0 : activityList.hashCode());
+		result = prime * result + tripRequestId;
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Itinerary))
+			return false;
+		Itinerary other = (Itinerary) obj;
+		if (activityList == null) {
+			if (other.activityList != null)
+				return false;
+		} else if (!activityList.equals(other.activityList))
+			return false;
+		if (tripRequestId != other.tripRequestId)
+			return false;
+		return true;
+	}
+
 	/**
 	 * @return the tripRequestId
 	 */

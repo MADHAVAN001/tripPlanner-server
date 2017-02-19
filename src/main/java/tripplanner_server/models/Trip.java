@@ -20,6 +20,15 @@ public class Trip {
 	String city;
 	Location startPoint;
 
+	/**
+	 * 
+	 * @param id
+	 * @param budget
+	 * @param listInterests
+	 * @param fromDate
+	 * @param toDate
+	 * @param city
+	 */
 	public Trip(int id, double budget, List<String> listInterests, Date fromDate, Date toDate, String city) {
 		this.id = id;
 		this.budget = budget;
@@ -29,12 +38,90 @@ public class Trip {
 		this.city = city;
 	}
 
+	/**
+	 * 
+	 * @param budget
+	 * @param listInterests
+	 * @param fromDate
+	 * @param toDate
+	 * @param city
+	 */
 	public Trip(double budget, List<String> listInterests, Date fromDate, Date toDate, String city) {
 		this.budget = budget;
 		this.listInterests = listInterests;
 		this.fromDate = fromDate;
 		this.toDate = toDate;
 		this.city = city;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(budget);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result + ((fromDate == null) ? 0 : fromDate.hashCode());
+		result = prime * result + ((listInterests == null) ? 0 : listInterests.hashCode());
+		result = prime * result + ((startPoint == null) ? 0 : startPoint.hashCode());
+		result = prime * result + ((toDate == null) ? 0 : toDate.hashCode());
+		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Trip))
+			return false;
+		Trip other = (Trip) obj;
+		if (Double.doubleToLongBits(budget) != Double.doubleToLongBits(other.budget))
+			return false;
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		if (fromDate == null) {
+			if (other.fromDate != null)
+				return false;
+		} else if (!fromDate.equals(other.fromDate))
+			return false;
+		if (listInterests == null) {
+			if (other.listInterests != null)
+				return false;
+		} else if (!listInterests.equals(other.listInterests))
+			return false;
+		if (startPoint == null) {
+			if (other.startPoint != null)
+				return false;
+		} else if (!startPoint.equals(other.startPoint))
+			return false;
+		if (toDate == null) {
+			if (other.toDate != null)
+				return false;
+		} else if (!toDate.equals(other.toDate))
+			return false;
+		if (userName == null) {
+			if (other.userName != null)
+				return false;
+		} else if (!userName.equals(other.userName))
+			return false;
+		return true;
 	}
 
 	/**
