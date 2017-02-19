@@ -40,7 +40,17 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param itinerary
+	 * @param responseId
+	 * @return
+	 */
 	public boolean addItinerary(Itinerary itinerary, int responseId) {
 		if (itinerary == null)
 			return false;
@@ -63,8 +73,8 @@ public class DatabaseManager {
 					String sql = "INSERT INTO \"" + schemaName
 							+ "\".itinerary(triprequest, day, orderid, starttime, endtime, activitytype, activityid) VALUES ("
 							+ itinerary.getTripRequestId() + ", " + i + ", " + key.toString() + ", \'"
-							+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, " + activity.getId()
-							+ ");";
+							+ activity.getFromDate() + "\', \'" + activity.getToDate() + "\', 1, "
+							+ activity.getTransport().getId() + ");";
 					result = result & this.executeUpdate(sql);
 				} else if (itinerary.getActivityList().get(i).get(key) instanceof PlaceActivity) {
 					PlaceActivity activity = (PlaceActivity) itinerary.getActivityList().get(i).get(key);
@@ -102,10 +112,12 @@ public class DatabaseManager {
 			return -1;
 		String sql = "INSERT INTO \"" + schemaName
 				+ "\".transport(distance, duration, startlatitude, startlongitude, endlatitude, endlongitude, modeoftransport) VALUES("
-				+ transport.getDistance() + ", " + transport.getDuration() + ", "
-				+ transport.getStartPoint().getLatitude() + ", " + transport.getStartPoint().getLongitude() + ", "
-				+ transport.getEndPoint().getLatitude() + ", " + transport.getEndPoint().getLongitude() + ", \'"
-				+ transport.getModeOfTransport() + "\');";
+				+ transport.getTransport().getDistance() + ", " + transport.getTransport().getDuration() + ", "
+				+ transport.getTransport().getStartPoint().getLatitude() + ", "
+				+ transport.getTransport().getStartPoint().getLongitude() + ", "
+				+ transport.getTransport().getEndPoint().getLatitude() + ", "
+				+ transport.getTransport().getEndPoint().getLongitude() + ", \'"
+				+ transport.getTransport().getModeOfTransport() + "\');";
 		this.executeUpdate(sql);
 
 		sql = "SELECT * FROM \"" + schemaName + "\".transport ORDER BY id;";
