@@ -21,12 +21,12 @@
  
      <servlet-mapping>
       <servlet-name>tripplanner</servlet-name>
-      <url-pattern>/event</url-pattern>
+      <url-pattern>/trip</url-pattern>
    </servlet-mapping>
    
       <servlet-mapping>
       <servlet-name>tripplanner</servlet-name>
-      <url-pattern>/transport</url-pattern>
+      <url-pattern>/login</url-pattern>
    </servlet-mapping>
    
     

@@ -9,123 +9,58 @@ import java.util.Date;
  *
  */
 public class TransportActivity extends Activity {
-	Location startPoint;
-	Location endPoint;
-	double duration;
-	double distance;
-	String modeOfTransport;
-	int id;
 
-	public TransportActivity(Location startPoint, Location endPoint, double distance, double duration,
-			String modeOfTransport, Date fromDate, Date toDate) {
+	Transport transport;
+
+	public TransportActivity(Transport transport, Date fromDate, Date toDate) {
 		super(fromDate, toDate);
-		this.distance = distance;
-		this.startPoint = startPoint;
-		this.endPoint = endPoint;
-		this.duration = duration;
-		this.modeOfTransport = modeOfTransport;
-	}
-
-	/**
-	 * @return the distance
-	 */
-	public double getDistance() {
-		return distance;
-	}
-
-	/**
-	 * @param distance
-	 *            the distance to set
-	 */
-	public void setDistance(double distance) {
-		this.distance = distance;
-	}
-
-	/**
-	 * Starting point
-	 * 
-	 * @return Location startPoint
-	 */
-	public Location getStartPoint() {
-		return startPoint;
-	}
-
-	/**
-	 * Setter for StartPoint
-	 * 
-	 * @param startPoint
-	 */
-	public void setStartPoint(Location startPoint) {
-		this.startPoint = startPoint;
-	}
-
-	/**
-	 * Getter for endPoint
-	 * 
-	 * @return Location endPoint
-	 */
-	public Location getEndPoint() {
-		return endPoint;
-	}
-
-	/**
-	 * Setter for endPoint
-	 * 
-	 * @param endPoint
-	 */
-	public void setEndPoint(Location endPoint) {
-		this.endPoint = endPoint;
-	}
-
-	/**
-	 * return duration in minutes
-	 * 
-	 * @return double duration
-	 */
-	public double getDuration() {
-		return duration;
-	}
-
-	/**
-	 * Setter for duration
-	 * 
-	 * @param duration
-	 */
-	public void setDuration(double duration) {
-		this.duration = duration;
-	}
-
-	/**
-	 * returns mode of transport
-	 * 
-	 * @return String modeOfTransport
-	 */
-	public String getModeOfTransport() {
-		return modeOfTransport;
-	}
-
-	/**
-	 * Sets the mode of transport
-	 * 
-	 * @param modeOfTransport
-	 */
-	public void setModeOfTransport(String modeOfTransport) {
-		this.modeOfTransport = modeOfTransport;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
+		this.transport = transport;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((transport == null) ? 0 : transport.hashCode())+super.hashCode();
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof TransportActivity))
+			return false;
+		TransportActivity other = (TransportActivity) obj;
+		if (transport == null) {
+			if (other.transport != null)
+				return false;
+		} else if (!transport.equals(other.transport))
+			return false;
+		return true & super.equals(obj);
+	}
+
+	/**
+	 * @return the transport
+	 */
+	public Transport getTransport() {
+		return transport;
+	}
+
+	/**
+	 * @param transport
+	 *            the transport to set
+	 */
+	public void setTransport(Transport transport) {
+		this.transport = transport;
+	}
 
 }

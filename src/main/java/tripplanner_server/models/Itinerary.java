@@ -1,6 +1,6 @@
 package tripplanner_server.models;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +11,10 @@ import java.util.Map;
  */
 public class Itinerary {
 	int tripRequestId;
-	List<Map<Integer, List<Object>>> activityList;
+	Map<Integer, List<Object>> activityMap;
 
-	public Itinerary(int tripRequestId, List<Map<Integer, List<Object>>> activityList) {
-		activityList = new ArrayList<Map<Integer, List<Object>>>(activityList);
+	public Itinerary(int tripRequestId, Map<Integer, List<Object>> activityMap) {
+		activityMap = new HashMap<Integer, List<Object>>(activityMap);
 	}
 
 	/**
@@ -33,18 +33,56 @@ public class Itinerary {
 	}
 
 	/**
-	 * @return the activityList
+	 * @return the activityMap
 	 */
-	public List<Map<Integer, List<Object>>> getActivityList() {
-		return activityList;
+	public Map<Integer, List<Object>> getActivityMap() {
+		return activityMap;
 	}
 
 	/**
-	 * @param activityList
-	 *            the activityList to set
+	 * @param activityMap
+	 *            the activityMap to set
 	 */
-	public void setActivityList(List<Map<Integer, List<Object>>> activityList) {
-		this.activityList = activityList;
+	public void setActivityMap(Map<Integer, List<Object>> activityMap) {
+		this.activityMap = activityMap;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((activityMap == null) ? 0 : activityMap.hashCode());
+		result = prime * result + tripRequestId;
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Itinerary))
+			return false;
+		Itinerary other = (Itinerary) obj;
+		if (activityMap == null) {
+			if (other.activityMap != null)
+				return false;
+		} else if (!activityMap.equals(other.activityMap))
+			return false;
+		if (tripRequestId != other.tripRequestId)
+			return false;
+		return true;
 	}
 
 }

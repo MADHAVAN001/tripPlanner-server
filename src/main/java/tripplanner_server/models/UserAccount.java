@@ -18,12 +18,55 @@ public class UserAccount {
 	Date date;
 	String userName;
 
+	/**
+	 * 
+	 * @param email
+	 * @param password
+	 * @param date
+	 * @param userName
+	 */
 	public UserAccount(String email, String password, Date date, String userName) {
 		this.email = email;
 		this.password = password;
 		this.date = date;
 		this.userName = userName;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof UserAccount))
+			return false;
+		UserAccount other = (UserAccount) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		return true;
+	}
+
 	/**
 	 * @return the id
 	 */
@@ -32,7 +75,8 @@ public class UserAccount {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(String id) {
 		this.id = id;

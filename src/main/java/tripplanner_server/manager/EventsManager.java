@@ -6,9 +6,11 @@ package tripplanner_server.manager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.evdb.javaapi.APIConfiguration;
 import com.evdb.javaapi.EVDBAPIException;
@@ -29,9 +31,44 @@ import tripplanner_server.models.Location;
  *
  */
 public class EventsManager {
+	public static Map<Pair<String, String>, List<EventObject>> eventsMap;
 	private String API_KEY = "7m2B8sjhmH2vHpt5";
+	DatabaseManager manager;
+	static {
+		eventsMap = new HashMap<Pair<String, String>, List<EventObject>>();
+	}
 
+	public EventsManager() {
+		manager = new DatabaseManager();
+	}
+
+	/**
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public int addEvents(EventObject event) {
+		if (event == null)
+			return -1;
+		return manager.addEvent(event);
+	}
+
+	/**
+	 * 
+	 * @param keyword
+	 * @param dateRange
+	 * @return
+	 * @throws EVDBRuntimeException
+	 * @throws EVDBAPIException
+	 */
 	public List<EventObject> getEvents(String keyword, String dateRange) throws EVDBRuntimeException, EVDBAPIException {
+
+		if (keyword == null || keyword.length() == 0 || dateRange == null || dateRange.length() == 0)
+			return null;
+
+		if (eventsMap.containsKey(Pair.of(keyword, dateRange)))
+			return eventsMap.get(Pair.of(keyword, dateRange));
+		
 		List<EventObject> eventsList = new ArrayList<EventObject>();
 
 		String title;
@@ -53,7 +90,8 @@ public class EventsManager {
 		EventSearchRequest esr = new EventSearchRequest();
 		esr.setLocation("Singapore");
 		esr.setKeywords(keyword);
-		esr.setDateRange(dateRange); //format e.g 2017020000-20170420000
+	
+		esr.setDateRange(dateRange); // format e.g 2017020000-20170420000
 
 		esr.setPageSize(50); // can change depending
 		esr.setPageNumber(1);
@@ -63,17 +101,18 @@ public class EventsManager {
 		sr = eo.search(esr);
 
 		ArrayList<Event> arrayList = (ArrayList<Event>) sr.getEvents();
-
+		
+		System.out.println(arrayList.size());
+		
+		
 		for (int i = 0; i < arrayList.size(); i++) {
-
 			title = arrayList.get(i).getTitle();
 			venueName = arrayList.get(i).getVenueName();
 			venueCity = arrayList.get(i).getVenueCity();
 			description = arrayList.get(i).getDescription();
-			try{
-			price = Double.parseDouble(arrayList.get(i).getPrice());
-			}
-			catch(Exception e){
+			try {
+				price = Double.parseDouble(arrayList.get(i).getPrice());
+			} catch (Exception e) {
 				price = 0.0;
 			}
 			startTime = arrayList.get(i).getStartTime();
@@ -84,34 +123,54 @@ public class EventsManager {
 			EventObject e = new EventObject(title, venueName, venueCity, description, price, startTime, stopTime,
 					getURL, new Location(latitude, longitude));
 			eventsList.add(e);
-
+			
 		}
+		eventsMap.put(Pair.of(keyword, dateRange), eventsList);
+		
+	
 		return eventsList;
 	}
-	
-	public String[] handleEventRequestJSON(String keyword,String dateRange) throws JsonGenerationException, JsonMappingException, IOException, EVDBRuntimeException, EVDBAPIException{
-		String dateTime="";
-		if(dateRange==null){
-			dateTime = null;
-		}
-		else
-			dateTime = dateRange;
-		
-		List<EventObject> eventList = getEvents(keyword,dateTime);
-		
-		
-		ObjectMapper mapper = new ObjectMapper();
-		
-		 String[] eventToJSONString = new String[eventList.size()]; 
-		 for(int i =0; i<eventList.size();i++){
-       	  
-       	  eventToJSONString[i] = mapper.writeValueAsString(eventList.get(i));
-      
-		 }
-         return eventToJSONString; 
-	
-	
-	
-	}
-}
 
+	/**
+	 * 
+	 * @param keyword
+	 * @param dateRange
+	 * @return
+	 * @throws JsonGenerationException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 * @throws EVDBRuntimeException
+	 * @throws EVDBAPIException
+	 */
+	public String[] handleEventRequestJSON(String keyword, String dateRange)
+			throws JsonGenerationException, JsonMappingException, IOException, EVDBRuntimeException, EVDBAPIException {
+		String dateTime = "";
+		if (dateRange == null) {
+			dateTime = null;
+		} else
+			dateTime = dateRange;
+
+		List<EventObject> eventList = getEvents(keyword, dateTime);
+
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		
+		String[] eventToJSONString = new String[eventList.size()];
+		
+		if(eventToJSONString.equals(null)){
+			System.out.println(keyword);
+			System.out.println(dateRange);
+			System.out.println("Event List is null!");
+		}
+		for (int i = 0; i < eventList.size(); i++) {
+
+			eventToJSONString[i] = mapper.writeValueAsString(eventList.get(i));
+
+		}
+		return eventToJSONString;
+
+	}
+	
+	
+}

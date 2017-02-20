@@ -49,7 +49,7 @@ public class HelloController{
 		 String keyword = request.getParameter("keyword");
 		 String dateRange = request.getParameter("DateRange");
 		 
-		 System.out.println(keyword);
+		 System.out.println(keyword ="this is running");
 		 System.out.println(dateRange);
 		 
 		 try {

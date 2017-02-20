@@ -25,7 +25,7 @@ public class PlaceManager {
 	 * @param listKeyword
 	 * @return
 	 */
-	public List<Place> getListAttractionPlaces(Location centre, int radius, List<String> listKeyword) {
+	public static List<Place> getListAttractionPlaces(Location centre, int radius, List<String> listKeyword) {
 		List<Place> attractions = new ArrayList<Place>();
 
 		for (String keyword : listKeyword) {
@@ -50,7 +50,7 @@ public class PlaceManager {
 	 * @param query
 	 * @return
 	 */
-	public List<Place> getPlacebyText(String query) {
+	public static List<Place> getPlacebyText(String query) {
 		List<Place> listPlaces = new ArrayList<Place>();
 		try {
 			listPlaces = Places.textSearch(Params.create().query(query)).getResult();

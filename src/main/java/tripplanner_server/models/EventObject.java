@@ -21,8 +21,20 @@ public class EventObject {
 	String getURL;
 	Location location;
 
-	public EventObject(String title, String venueName, String venueCity, String description, double price, Date startTime,
-			Date stopTime, String getURL, Location location) {
+	/**
+	 * 
+	 * @param title
+	 * @param venueName
+	 * @param venueCity
+	 * @param description
+	 * @param price
+	 * @param startTime
+	 * @param stopTime
+	 * @param getURL
+	 * @param location
+	 */
+	public EventObject(String title, String venueName, String venueCity, String description, double price,
+			Date startTime, Date stopTime, String getURL, Location location) {
 		this.title = title;
 		this.venueName = venueName;
 		this.venueCity = venueCity;
@@ -32,8 +44,92 @@ public class EventObject {
 		this.getURL = getURL;
 		this.location = location;
 	}
-	
-	
+
+	/**
+	 * 
+	 * @param id
+	 * @param title
+	 * @param venueName
+	 * @param venueCity
+	 * @param description
+	 * @param price
+	 * @param startTime
+	 * @param stopTime
+	 * @param getURL
+	 * @param location
+	 */
+	public EventObject(int id, String title, String venueName, String venueCity, String description, double price,
+			Date startTime, Date stopTime, String getURL, Location location) {
+		this.id = id;
+		this.title = title;
+		this.venueName = venueName;
+		this.venueCity = venueCity;
+		this.price = price;
+		this.startTime = startTime;
+		this.stopTime = stopTime;
+		this.getURL = getURL;
+		this.location = location;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
+		result = prime * result + ((stopTime == null) ? 0 : stopTime.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((venueCity == null) ? 0 : venueCity.hashCode());
+		result = prime * result + ((venueName == null) ? 0 : venueName.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EventObject other = (EventObject) obj;
+		if (startTime == null) {
+			if (other.startTime != null)
+				return false;
+		} else if (!startTime.equals(other.startTime))
+			return false;
+		if (stopTime == null) {
+			if (other.stopTime != null)
+				return false;
+		} else if (!stopTime.equals(other.stopTime))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (venueCity == null) {
+			if (other.venueCity != null)
+				return false;
+		} else if (!venueCity.equals(other.venueCity))
+			return false;
+		if (venueName == null) {
+			if (other.venueName != null)
+				return false;
+		} else if (!venueName.equals(other.venueName))
+			return false;
+		return true;
+	}
+
 	/**
 	 * @return the id
 	 */
@@ -42,12 +138,12 @@ public class EventObject {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	/**
 	 * @return the title
