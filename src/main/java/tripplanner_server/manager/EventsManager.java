@@ -41,6 +41,7 @@ public class EventsManager {
 	public EventsManager() {
 		manager = new DatabaseManager();
 	}
+<<<<<<< HEAD
 
 	/**
 	 * 
@@ -55,6 +56,22 @@ public class EventsManager {
 
 	/**
 	 * 
+=======
+
+	/**
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public int addEvents(EventObject event) {
+		if (event == null)
+			return -1;
+		return manager.addEvent(event);
+	}
+
+	/**
+	 * 
+>>>>>>> origin/master
 	 * @param keyword
 	 * @param dateRange
 	 * @return
@@ -90,7 +107,10 @@ public class EventsManager {
 		EventSearchRequest esr = new EventSearchRequest();
 		esr.setLocation("Singapore");
 		esr.setKeywords(keyword);
+<<<<<<< HEAD
 	
+=======
+>>>>>>> origin/master
 		esr.setDateRange(dateRange); // format e.g 2017020000-20170420000
 
 		esr.setPageSize(50); // can change depending
@@ -123,11 +143,16 @@ public class EventsManager {
 			EventObject e = new EventObject(title, venueName, venueCity, description, price, startTime, stopTime,
 					getURL, new Location(latitude, longitude));
 			eventsList.add(e);
+<<<<<<< HEAD
 			
 		}
 		eventsMap.put(Pair.of(keyword, dateRange), eventsList);
 		
 	
+=======
+		}
+		eventsMap.put(Pair.of(keyword, dateRange), eventsList);
+>>>>>>> origin/master
 		return eventsList;
 	}
 
@@ -152,6 +177,7 @@ public class EventsManager {
 
 		List<EventObject> eventList = getEvents(keyword, dateTime);
 
+<<<<<<< HEAD
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -163,6 +189,11 @@ public class EventsManager {
 			System.out.println(dateRange);
 			System.out.println("Event List is null!");
 		}
+=======
+		ObjectMapper mapper = new ObjectMapper();
+
+		String[] eventToJSONString = new String[eventList.size()];
+>>>>>>> origin/master
 		for (int i = 0; i < eventList.size(); i++) {
 
 			eventToJSONString[i] = mapper.writeValueAsString(eventList.get(i));
@@ -171,6 +202,9 @@ public class EventsManager {
 		return eventToJSONString;
 
 	}
+<<<<<<< HEAD
 	
 	
+=======
+>>>>>>> origin/master
 }
