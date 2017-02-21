@@ -535,7 +535,7 @@ public class DatabaseManager {
 		if (account == null)
 			return false;
 		String sql = "INSERT INTO \"" + schemaName + "\".useraccount(username, password, email, date)	VALUES (\'"
-				+ account.getUserName() + "\', \'" + account.getPassword() + "\', \"" + account.getEmail() + "\', \""
+				+ account.getUserName() + "\', \'" + account.getPassword() + "\', \'" + account.getEmail() + "\', \'"
 				+ account.getDate() + "\');";
 		return this.executeUpdate(sql);
 	}
