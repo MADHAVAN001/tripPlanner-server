@@ -36,7 +36,7 @@ public class PlaceActivity extends Activity {
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
-			return true;
+			return true & super.equals(obj);
 		if (!super.equals(obj))
 			return false;
 		if (!(obj instanceof PlaceActivity))

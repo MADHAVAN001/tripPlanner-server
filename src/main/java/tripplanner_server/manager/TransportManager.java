@@ -21,6 +21,8 @@ import tripplanner_server.models.TransportActivity;
  *
  */
 public class TransportManager {
+	
+	static final long ONE_MINUTE_IN_MILLIS = 60000;
 	/**
 	 * 
 	 * @param startPoint
@@ -28,7 +30,7 @@ public class TransportManager {
 	 * @param fromDate
 	 * @return
 	 */
-	public TransportActivity getTransportationDetails(Location startPoint, Location endPoint, Date fromDate) {
+	public static TransportActivity getTransportationDetails(Location startPoint, Location endPoint, Date fromDate) {
 		if (startPoint == null || endPoint == null || fromDate == null)
 			return null;
 		TransportActivity activity = null;
@@ -43,8 +45,7 @@ public class TransportManager {
 			DistanceMatrixRow row[] = matrix.rows;
 			for (DistanceMatrixElement element : row[0].elements) {
 				@SuppressWarnings("deprecation")
-				Date toDate = new Date(fromDate.getYear(), fromDate.getMonth(), fromDate.getDay(), fromDate.getHours(),
-						fromDate.getMinutes());
+				Date toDate = new Date(fromDate.getTime() + element.duration.inSeconds*1000);
 				Transport transport = new Transport(startPoint, endPoint, element.distance.inMeters,
 						element.duration.inSeconds, "TAXI");
 				activity = new TransportActivity(transport, fromDate, toDate);

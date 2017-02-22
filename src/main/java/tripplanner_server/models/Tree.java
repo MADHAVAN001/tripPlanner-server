@@ -26,6 +26,7 @@ public class Tree<T> {
 	}
 
 	public void addLeaf(T root, T leaf) {
+		System.out.println("In tree: "+ locate.containsKey(root));
 		if (locate.containsKey(root)) {
 			locate.get(root).addLeaf(leaf);
 		} else {
@@ -87,7 +88,9 @@ public class Tree<T> {
 		}
 		return new ArrayList<T>();
 	}
-
+	public boolean containsNode(T t){
+		return locate.containsKey(t);
+	}
 	@Override
 	public String toString() {
 		return printTree(0);
