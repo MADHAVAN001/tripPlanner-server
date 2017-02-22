@@ -14,7 +14,7 @@ public class Itinerary {
 	Map<Integer, List<Object>> activityMap;
 
 	public Itinerary(int tripRequestId, Map<Integer, List<Object>> activityMap) {
-		activityMap = new HashMap<Integer, List<Object>>(activityMap);
+		this.activityMap = new HashMap<Integer, List<Object>>(activityMap);
 	}
 
 	/**
