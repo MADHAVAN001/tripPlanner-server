@@ -178,7 +178,7 @@ public class DatabaseManager {
 			while (resultSet.next()) {
 				Array listInterests = resultSet.getArray("listinterests");
 				String[] interestsArray = (String[]) listInterests.getArray();
-				trip = new Trip(resultSet.getInt("id"), resultSet.getDouble("budget"),
+				trip = new Trip(resultSet.getInt("id"), resultSet.getString("username"), resultSet.getDouble("budget"),
 						new ArrayList<String>(Arrays.asList(interestsArray)), df.parse(resultSet.getString("fromdate")),
 						df.parse(resultSet.getString("todate")), resultSet.getString("city"),
 						new Location(resultSet.getDouble("startlatitude"), resultSet.getDouble("startlatitude")));
@@ -385,7 +385,7 @@ public class DatabaseManager {
 
 		String sql = "INSERT INTO \"" + schemaName
 				+ "\".triprequests(username, listinterests, fromdate, todate, startlatitude, startlongitude, city, budget) VALUES (\'"
-				+ trip.getUserName() + "\', [";
+				+ trip.getUserName() + "\', ARRAY[";
 
 		for (int i = 0; i < trip.getListInterests().size(); i++) {
 			if (i != trip.getListInterests().size() - 1)
@@ -395,7 +395,8 @@ public class DatabaseManager {
 		}
 		sql += "], \'" + trip.getFromDate().toString() + "\', \'" + trip.getToDate().toString() + "\', "
 				+ trip.getStartPoint().getLatitude() + ", " + trip.getStartPoint().getLongitude() + ", \'"
-				+ trip.getCity() + "\'', " + trip.getBudget() + ");";
+				+ trip.getCity() + "\', " + trip.getBudget() + ");";
+		System.out.println(sql);
 		this.executeUpdate(sql);
 
 		sql = "SELECT id FROM \"" + schemaName + "\".triprequests WHERE username = \'" + trip.getUserName()

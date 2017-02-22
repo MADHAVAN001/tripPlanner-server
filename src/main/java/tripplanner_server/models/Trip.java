@@ -29,8 +29,9 @@ public class Trip {
 	 * @param toDate
 	 * @param city
 	 */
-	public Trip(int id, double budget, List<String> listInterests, Date fromDate, Date toDate, String city, Location location) {
+	public Trip(int id, String userName, double budget, List<String> listInterests, Date fromDate, Date toDate, String city, Location location) {
 		this.id = id;
+		this.userName = userName;
 		this.budget = budget;
 		this.listInterests = listInterests;
 		this.fromDate = fromDate;
@@ -47,7 +48,8 @@ public class Trip {
 	 * @param toDate
 	 * @param city
 	 */
-	public Trip(double budget, List<String> listInterests, Date fromDate, Date toDate, String city, Location location) {
+	public Trip(String userName,double budget, List<String> listInterests, Date fromDate, Date toDate, String city, Location location) {
+		this.userName = userName;
 		this.budget = budget;
 		this.listInterests = listInterests;
 		this.fromDate = fromDate;
