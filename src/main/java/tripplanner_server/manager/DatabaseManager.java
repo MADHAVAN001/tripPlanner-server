@@ -550,8 +550,38 @@ public class DatabaseManager {
 		if (email == null || email.length() == 0)
 			return false;
 
-		String sql = "DELETE FROM \"" + schemaName + "\"s.useraccount	WHERE email = \'" + email + "\';";
+		String sql = "DELETE FROM \"" + schemaName + "\".useraccount	WHERE email = \'" + email + "\';";
 		return this.executeUpdate(sql);
+
+	}
+
+	/**
+	 * 
+	 * @param email
+	 * @param password
+	 * @return
+	 */
+	public boolean checkValidity(String email, String password) {
+		if (email == null || password == null || email.length() == 0 || password.length() == 0)
+			return false;
+		String sql = "SELECT * FROM \"" + schemaName + "\".useraccount WHERE email=\'" + email + "\' AND password = \'"
+				+ password + "\';";
+
+		Statement statement;
+		boolean exists = false;
+		try {
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			if (resultSet.next()) {
+				exists = resultSet.getString("email").equals(email);
+			}
+			statement.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return exists;
 
 	}
 
