@@ -26,7 +26,6 @@ public class Tree<T> {
 	}
 
 	public void addLeaf(T root, T leaf) {
-		System.out.println("In tree: "+ locate.containsKey(root));
 		if (locate.containsKey(root)) {
 			locate.get(root).addLeaf(leaf);
 		} else {
